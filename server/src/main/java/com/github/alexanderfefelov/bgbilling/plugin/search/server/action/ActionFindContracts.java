@@ -7,6 +7,8 @@ import org.w3c.dom.Element;
 import ru.bitel.bgbilling.common.BGIllegalArgumentException;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,16 +16,19 @@ public class ActionFindContracts extends ActionBase {
 
     @Override
     public void doAction() throws BGIllegalArgumentException, IOException, SQLException {
-        String query = this.getParameter("q");
-        if (query == null) {
+        String q = this.getParameter("q");
+        if (q == null) {
             throw new BGIllegalArgumentException();
         }
+
+        String query = URLDecoder.decode(q, StandardCharsets.UTF_8.name());
 
         SearchResultDAO dao = new SearchResultDAO(con, log);
         List<SearchResult> list = dao.findContracts(query);
         Element xmlList = createElement(rootNode, "list");
         list.forEach(record -> {
             Element element = createElement(xmlList, "record");
+            element.setAttribute("trigger", record.getTrigger());
             element.setAttribute("contractId", record.getContractId().toString());
             element.setAttribute("contractNo", record.getContractNo());
             element.setAttribute("contractStartDate", record.getContractStartDate().toString());

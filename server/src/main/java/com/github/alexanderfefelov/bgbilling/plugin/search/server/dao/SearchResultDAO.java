@@ -26,18 +26,12 @@ public class SearchResultDAO {
 
         try {
             long id = Long.parseLong(query);
-            try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contract_by_id"))) {
+            try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts_by_id"))) {
                 statement.setLong(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
-                    SearchResult record = new SearchResult();
-                    record.setContractId(resultSet.getLong("contractId"));
-                    record.setContractNo(resultSet.getString("contractNo"));
-                    record.setContractStartDate(resultSet.getDate("contractStartDate"));
-                    record.setContractExpirationDate(resultSet.getDate("contractExpirationDate"));
-                    list.add(record);
+                    list.add(getRecordFromResultSet(resultSet));
                 }
-                return list;
             } catch (SQLException sqle) {
                 logger.error(sqle);
                 throw sqle;
@@ -45,7 +39,27 @@ public class SearchResultDAO {
         } catch (NumberFormatException nfe) {
         }
 
-        return list;
+        try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts_by_text_parameter"))) {
+            statement.setString(1, query);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getRecordFromResultSet(resultSet));
+            }
+            return list;
+        } catch (SQLException sqle) {
+            logger.error(sqle);
+            throw sqle;
+        }
+    }
+
+    private SearchResult getRecordFromResultSet(ResultSet resultSet) throws SQLException {
+        SearchResult record = new SearchResult();
+        record.setTrigger(resultSet.getString("trigger"));
+        record.setContractId(resultSet.getLong("contractId"));
+        record.setContractNo(resultSet.getString("contractNo"));
+        record.setContractStartDate(resultSet.getDate("contractStartDate"));
+        record.setContractExpirationDate(resultSet.getDate("contractExpirationDate"));
+        return record;
     }
 
     private void loadSQLQueries() throws IOException {

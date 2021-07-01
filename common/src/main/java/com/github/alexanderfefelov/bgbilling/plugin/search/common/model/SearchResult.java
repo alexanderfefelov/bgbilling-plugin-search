@@ -4,6 +4,14 @@ import java.util.Date;
 
 public class SearchResult {
 
+    public String getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+    }
+
     public Long getContractId() {
         return contractId;
     }
@@ -36,6 +44,7 @@ public class SearchResult {
         this.contractExpirationDate = contractExpirationDate;
     }
 
+    private String trigger;
     private Long contractId;
     private String contractNo;
     private Date contractStartDate;
