@@ -3,15 +3,23 @@ package com.github.alexanderfefelov.bgbilling.plugin.search.server.dao;
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import org.apache.log4j.Logger;
 
-import java.sql.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class SearchResultDAO {
 
-    public SearchResultDAO(Connection connection, Logger logger) {
+    public SearchResultDAO(Connection connection, Logger logger) throws IOException {
         this.connection = connection;
         this.logger = logger;
+        loadSQLQueries();
     }
 
     public List<SearchResult> findContracts(String query) throws SQLException {
@@ -19,7 +27,7 @@ public class SearchResultDAO {
 
         try {
             long id = Long.parseLong(query);
-            try (PreparedStatement statement = connection.prepareStatement(QUERY_FIND_CONTRACT_BY_ID)) {
+            try (PreparedStatement statement = connection.prepareStatement(queries.getProperty("find_contract_by_id"))) {
                 statement.setLong(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -41,18 +49,12 @@ public class SearchResultDAO {
         return list;
     }
 
-    public static final String QUERY_FIND_CONTRACT_BY_ID = String.join("\n",
-            "select",
-            "  c.id as 'contractId',",
-            "  c.title as 'contractNo',",
-            "  c.date1 as 'contractStartDate',",
-            "  coalesce(c.date2, '2042-04-01') as 'contractExpirationDate'",
-            "from",
-            "  contract c",
-            "where",
-            "  c.id = ?"
-    );
+    private void loadSQLQueries() throws IOException {
+        InputStream stream = getClass().getResourceAsStream("sql-queries.properties");
+        queries.load(stream);
+    }
 
+    private final Properties queries = new Properties();
     private final Connection connection;
     private final Logger logger;
 

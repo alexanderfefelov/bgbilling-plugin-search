@@ -6,13 +6,14 @@ import com.github.alexanderfefelov.bgbilling.plugin.search.server.dao.SearchResu
 import org.w3c.dom.Element;
 import ru.bitel.bgbilling.common.BGIllegalArgumentException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 public class ActionFindContracts extends ActionBase {
 
     @Override
-    public void doAction() throws BGIllegalArgumentException, SQLException {
+    public void doAction() throws BGIllegalArgumentException, IOException, SQLException {
         String query = this.getParameter("q");
         if (query == null) {
             throw new BGIllegalArgumentException();
