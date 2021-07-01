@@ -26,17 +26,20 @@ public class ActionFindContracts extends ActionBase {
         SearchResultDAO dao = new SearchResultDAO(con, log);
         List<SearchResult> list = dao.findContracts(query);
         Element xmlList = createElement(rootNode, "list");
-        list.forEach(record -> {
-            Element element = createElement(xmlList, "record");
-            element.setAttribute("trigger", record.getTrigger());
-            element.setAttribute("contractId", record.getContractId().toString());
-            element.setAttribute("contractNo", record.getContractNo());
-            element.setAttribute("contractStartDate", record.getContractStartDate().toString());
-            element.setAttribute("contractExpirationDate", record.getContractExpirationDate().toString());
-        });
+        list.forEach(record -> createElementFromRecord(xmlList, record));
 
         Element xmlQuery = createElement(rootNode, "query");
         xmlQuery.setAttribute("value", query);
+    }
+
+    private Element createElementFromRecord(Element xmlList, SearchResult record) {
+        Element element = createElement(xmlList, "record");
+        element.setAttribute("trigger", record.getTrigger());
+        element.setAttribute("contractId", record.getContractId().toString());
+        element.setAttribute("contractNo", record.getContractNo());
+        element.setAttribute("contractStartDate", record.getContractStartDate().toString());
+        element.setAttribute("contractExpirationDate", record.getContractExpirationDate().toString());
+        return element;
     }
 
 }

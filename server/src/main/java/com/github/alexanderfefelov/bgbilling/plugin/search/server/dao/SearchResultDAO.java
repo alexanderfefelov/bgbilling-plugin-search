@@ -30,7 +30,7 @@ public class SearchResultDAO {
                 statement.setLong(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
-                    list.add(getRecordFromResultSet(resultSet));
+                    list.add(createRecordFromResultSet(resultSet));
                 }
             } catch (SQLException sqle) {
                 logger.error(sqle);
@@ -43,7 +43,7 @@ public class SearchResultDAO {
             statement.setString(1, query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                list.add(getRecordFromResultSet(resultSet));
+                list.add(createRecordFromResultSet(resultSet));
             }
             return list;
         } catch (SQLException sqle) {
@@ -52,7 +52,7 @@ public class SearchResultDAO {
         }
     }
 
-    private SearchResult getRecordFromResultSet(ResultSet resultSet) throws SQLException {
+    private SearchResult createRecordFromResultSet(ResultSet resultSet) throws SQLException {
         SearchResult record = new SearchResult();
         record.setTrigger(resultSet.getString("trigger"));
         record.setContractId(resultSet.getLong("contractId"));
