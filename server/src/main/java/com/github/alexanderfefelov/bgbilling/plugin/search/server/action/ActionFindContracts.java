@@ -21,7 +21,10 @@ public class ActionFindContracts extends ActionBase {
             throw new BGIllegalArgumentException();
         }
 
-        String query = URLDecoder.decode(q, StandardCharsets.UTF_8.name());
+        String query = URLDecoder.decode(q, StandardCharsets.UTF_8.name())
+                .replace("\\", "")
+                .replace("\\s+", " ")
+                .trim();
 
         SearchResultDAO dao = new SearchResultDAO(con, log);
         List<SearchResult> list = dao.findContracts(query);
