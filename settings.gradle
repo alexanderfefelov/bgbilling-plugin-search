@@ -1,0 +1,14 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+rootProject.name = 'bgbilling-plugin-search'
+
+gradle.ext {
+    pluginId = 'com.github.alexanderfefelov.bgbilling.plugin.search'
+    pluginVersion = '1.0'
+    pluginVendor = 'Alexander Fefelov <alexanderfefelov@yandex.ru>'
+    pluginBuildNumber = 'git rev-parse --short HEAD'.execute().getText().trim()
+    pluginBuildTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
+}
+
+include 'common'

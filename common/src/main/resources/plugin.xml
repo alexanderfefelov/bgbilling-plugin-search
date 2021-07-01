@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.github.alexanderfefelov.bgbilling.plugin.search"
+        name="Search"
+        version="42">
+
+    <extension point="bitel.billing.server.admin.action.ActionMenuAndToolBar">
+        <menu id="plugin">
+            <menuItem id="search_main"
+                      className="com.github.alexanderfefelov.bgbilling.plugin.search.client.Main"
+                      title="Поиск"/>
+        </menu>
+    </extension>
+
+</plugin>

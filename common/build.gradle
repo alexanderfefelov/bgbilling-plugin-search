@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+tasks.register('createVersionProperties', WriteProperties) {
+    def targetDir = "$buildDir/resources/main/ru/bitel/bgbilling/properties"
+    mkdir targetDir
+    outputFile = file "$targetDir/${gradle.ext.pluginId}.properties"
+    property 'name', gradle.ext.pluginId
+    property 'version', gradle.ext.pluginVersion
+    property 'build.number', gradle.ext.pluginBuildNumber
+    property 'build.time', gradle.ext.pluginBuildTime
+}
+
+processResources {
+    dependsOn createVersionProperties
+}
