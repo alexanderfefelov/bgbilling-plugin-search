@@ -1,0 +1,50 @@
+buildscript {
+    ext.bgbillingKernelVersion = '8.0_1352'
+}
+
+plugins {
+    id 'java-library-distribution'
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+    mavenCentral()
+}
+
+configurations {
+    fatJar
+}
+
+dependencies {
+    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+    compileOnly project(':common')
+    compileOnly name: "bgbilling-kernel-$bgbillingKernelVersion"
+    fatJar project(':common')
+}
+
+jar {
+    archiveBaseName = rootProject.name
+
+    manifest {
+        attributes 'Implementation-Title': gradle.ext.pluginId
+        attributes 'Implementation-Version': gradle.ext.pluginVersion + '_' + gradle.ext.pluginBuildNumber
+        attributes 'Implementation-Vendor': gradle.ext.pluginVendor
+    }
+
+    from {
+        configurations.fatJar.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+distZip {
+    eachFile {
+        path = it.relativePath
+        it.setPath(path.substring(path.indexOf('/') + 1, path.length()))
+    }
+}
