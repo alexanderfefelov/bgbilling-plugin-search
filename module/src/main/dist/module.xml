@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    <information
+            version="3.5"
+            type="plugin"
+            name="com.github.alexanderfefelov.bgbilling.plugin.search"
+            pack_server="com.github.alexanderfefelov.bgbilling.plugin.search.server"
+            pack_client="com.github.alexanderfefelov.bgbilling.plugin.search.client">
+        <vendor>Alexander Fefelov</vendor>
+        <title>Search</title>
+        <title lang="ru">Поиск</title>
+        <description>Search for contracts</description>
+        <description lang="ru">Поиск контрактов</description>
+    </information>
+    <resources>
+        <call class="PutFile" param="com.github.alexanderfefelov.bgbilling.plugin.search.xml:actions" />
+    </resources>
+</module>

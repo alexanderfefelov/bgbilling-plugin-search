@@ -1,0 +1,22 @@
+plugins {
+    id 'distribution'
+}
+
+project.version = gradle.ext.pluginVersion + '_' + gradle.ext.pluginBuildNumber
+
+distributions {
+    main {
+        contents {
+            from { project ':client' distZip }
+            from { project ':server' distZip }
+        }
+    }
+}
+
+distZip {
+    archiveBaseName = rootProject.name
+    eachFile {
+        path = it.relativePath
+        it.setPath(path.substring(path.indexOf('/') + 1, path.length()))
+    }
+}

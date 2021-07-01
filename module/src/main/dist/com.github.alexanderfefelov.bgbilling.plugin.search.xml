@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action id="42" mask="module=com.github.alexanderfefelov.bgbilling.plugin.search;action=FindContracts"
+            title="Найти контракты"/>
+</actions>
