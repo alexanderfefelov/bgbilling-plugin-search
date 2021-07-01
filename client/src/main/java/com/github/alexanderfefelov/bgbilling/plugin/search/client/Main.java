@@ -13,39 +13,50 @@ import ru.bitel.common.client.table.BGTableModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends BGUTabPanel {
 
-    public Main() throws Exception {
+    public Main() {
         super();
         tabTitle = "Поиск";
     }
 
     @Override
-    protected void jbInit() throws Exception {
+    protected void jbInit() {
         JPanel controls = new JPanel(new GridBagLayout());
 
         input = new JTextField(20);
         controls.add(input, new GridBagConstraints(0, 0, 1, 1, 0, 0, 10, 0,
-                new Insets(0, 5, 5, 0), 0, 0));
+                new Insets(0, 5, 5, 0),
+                0, 0));
 
         button = new JButton("Найти");
         button.addActionListener(e -> onFindButtonPressed());
         controls.add(button, new GridBagConstraints(1, 0, 1, 1, 0, 0, 10, 1,
-                new Insets(0, 5, 5, 5), 0, 0));
+                new Insets(0, 5, 5, 5),
+                0, 0));
+
         controls.add(new JPanel(), new GridBagConstraints(2, 0, 1, 1, 1, 0, 10, 2,
-                new Insets(0, 15, 0, 0), 0, 0));
+                new Insets(0, 15, 0, 0),
+                0, 0));
 
         page = new BGControlPanelPages();
         controls.add(page, new GridBagConstraints(4, 0, 1, 1, 0, 0, 10, 0, new
-                Insets(0, 15, 5, 5), 0, 0));
+                Insets(0, 15, 5, 5),
+                0, 0));
 
         setLayout(new GridBagLayout());
 
         add(controls, new GridBagConstraints(0, 0, 1, 1, 1, 0, 10, 1,
-                new Insets(5, 0, 5, 0), 0, 0));
+                new Insets(5, 0, 5, 0),
+                0, 0));
 
         model = new BGTableModel<SearchResult>("SearchResult") {
             protected void initColumns() {
@@ -57,8 +68,17 @@ public class Main extends BGUTabPanel {
             }
         };
         table = new BGUTable(model);
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    openContract(model.getSelectedRow().getContractId());
+                }
+
+            }
+        });
         add(new JScrollPane(table), new GridBagConstraints(0, 2, 1, 1, 1, 1, 10, 1,
-                new Insets(0, 5, 5, 5), 0, 0));
+                new Insets(0, 5, 5, 5),
+                0, 0));
 
         page.init();
     }
@@ -72,21 +92,30 @@ public class Main extends BGUTabPanel {
         request.setAttribute("q", input.getText());
         Document document = TransferManager.getDocument(request);
         List<SearchResult> list = new ArrayList<>();
-        XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromeLEMENT(element)));
+        XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
         model.setData(list);
 
         button.setEnabled(true);
     }
 
-    private SearchResult createRecordFromeLEMENT(Element element) {
+    private SearchResult createRecordFromElement(Element element) {
         SearchResult record = new SearchResult();
         record.setTrigger(element.getAttribute("trigger"));
-        // record.setContractId(element.getAttribute("contractId"));
+        record.setContractId(Integer.parseInt(element.getAttribute("contractId")));
         record.setContractNo(element.getAttribute("contractNo"));
-        //record.setContractStartDate(element.getAttribute(("contractStartDate"));
-        //record.setContractExpirationDate(element.getAttribute("contractExpirationDate"));
+        try {
+            record.setContractStartDate(dateFormat.parse(element.getAttribute("contractStartDate")));
+        } catch (ParseException e) {
+        }
+        try {
+            record.setContractExpirationDate(dateFormat.parse(element.getAttribute("contractExpirationDate")));
+        } catch (ParseException e) {
+        }
         return record;
     }
+
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     private JTextField input;
     private JButton button;

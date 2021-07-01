@@ -58,7 +58,7 @@ public class SearchResultDAO {
     private SearchResult createRecordFromResultSet(ResultSet resultSet) throws SQLException {
         SearchResult record = new SearchResult();
         record.setTrigger(resultSet.getString("trigger"));
-        record.setContractId(resultSet.getLong("contractId"));
+        record.setContractId(resultSet.getInt("contractId"));
         record.setContractNo(resultSet.getString("contractNo"));
         record.setContractStartDate(resultSet.getDate("contractStartDate"));
         record.setContractExpirationDate(resultSet.getDate("contractExpirationDate"));

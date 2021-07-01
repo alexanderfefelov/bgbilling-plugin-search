@@ -12,11 +12,11 @@ public class SearchResult {
         this.trigger = trigger;
     }
 
-    public Long getContractId() {
+    public Integer getContractId() {
         return contractId;
     }
 
-    public void setContractId(Long contractId) {
+    public void setContractId(Integer contractId) {
         this.contractId = contractId;
     }
 
@@ -45,7 +45,7 @@ public class SearchResult {
     }
 
     private String trigger;
-    private Long contractId;
+    private Integer contractId;
     private String contractNo;
     private Date contractStartDate;
     private Date contractExpirationDate;
