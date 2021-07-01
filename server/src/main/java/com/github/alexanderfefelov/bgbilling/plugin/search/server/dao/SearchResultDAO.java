@@ -3,7 +3,6 @@ package com.github.alexanderfefelov.bgbilling.plugin.search.server.dao;
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import org.apache.log4j.Logger;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -27,7 +26,7 @@ public class SearchResultDAO {
 
         try {
             long id = Long.parseLong(query);
-            try (PreparedStatement statement = connection.prepareStatement(queries.getProperty("find_contract_by_id"))) {
+            try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contract_by_id"))) {
                 statement.setLong(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -50,11 +49,12 @@ public class SearchResultDAO {
     }
 
     private void loadSQLQueries() throws IOException {
-        InputStream stream = getClass().getResourceAsStream("sql-queries.properties");
-        queries.load(stream);
+        try (InputStream stream = getClass().getResourceAsStream("sql-queries.properties")) {
+            sqlQueries.load(stream);
+        }
     }
 
-    private final Properties queries = new Properties();
+    private final Properties sqlQueries = new Properties();
     private final Connection connection;
     private final Logger logger;
 
