@@ -22,8 +22,8 @@ public class ActionFindContracts extends ActionBase {
         }
 
         String query = URLDecoder.decode(q, StandardCharsets.UTF_8.name())
-                .replace("\\", "")
-                .replace("\\s+", " ")
+                .replaceAll("\\\\", "")
+                .replaceAll("\\s+", " ")
                 .trim();
 
         SearchResultDAO dao = new SearchResultDAO(con, log);

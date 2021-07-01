@@ -39,8 +39,11 @@ public class SearchResultDAO {
         } catch (NumberFormatException nfe) {
         }
 
+        String regex = String.join(".*",
+                query.split("\\s+"));
+
         try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts_by_text_parameter"))) {
-            statement.setString(1, query);
+            statement.setString(1, regex);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(createRecordFromResultSet(resultSet));
