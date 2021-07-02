@@ -41,6 +41,7 @@ public class SearchResultDAO {
             statement.setString(4, terms);
             statement.setString(5, terms);
             statement.setString(6, terms);
+            statement.setString(7, terms);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(createRecordFromResultSet(resultSet));
@@ -54,7 +55,7 @@ public class SearchResultDAO {
 
     private SearchResult createRecordFromResultSet(ResultSet resultSet) throws SQLException {
         SearchResult record = new SearchResult();
-        record.setTrigger(resultSet.getString("trigger"));
+        record.setSource(resultSet.getString("source"));
         record.setContractId(resultSet.getInt("contractId"));
         record.setContractNo(resultSet.getString("contractNo"));
         record.setContractStartDate(resultSet.getDate("contractStartDate"));

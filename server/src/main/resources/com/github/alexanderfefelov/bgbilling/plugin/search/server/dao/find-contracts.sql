@@ -1,5 +1,5 @@
 select
-  group_concat(x.`trigger` separator '\n') as 'trigger',
+  group_concat(x.source separator '\n') as 'source',
   x.contractId,
   x.contractNo,
   x.contractStartDate,
@@ -8,7 +8,7 @@ select
 from
   (
     select
-      'Контракт' as 'trigger',
+      'Контракт' as 'source',
       c.id as 'contractId',
       c.title as 'contractNo',
       coalesce(c.date1, '2042-04-01') as 'contractStartDate',
@@ -22,7 +22,7 @@ from
       or c.comment regexp ?
     union
     select
-      cpp.title as 'trigger',
+      cpp.title as 'source',
       c.id as 'contractId',
       c.title as 'contractNo',
       coalesce(c.date1, '2042-04-01') as 'contractStartDate',
@@ -36,7 +36,7 @@ from
       cpt1.val regexp ?
     union
     select
-      cpp.title as 'trigger',
+      cpp.title as 'source',
       c.id as 'contractId',
       c.title as 'contractNo',
       coalesce(c.date1, '2042-04-01') as 'contractStartDate',
@@ -50,7 +50,7 @@ from
       cpt3.email regexp ?
     union
     select
-      cpp.title as 'trigger',
+      cpp.title as 'source',
       c.id as 'contractId',
       c.title as 'contractNo',
       coalesce(c.date1, '2042-04-01') as 'contractStartDate',
@@ -62,6 +62,21 @@ from
       left join contract_parameters_pref cpp on cpp.id = cptp.pid
     where
       cptp.value regexp ?
+    union
+    select
+      'Заметки' as 'source',
+      c.id as 'contractId',
+      c.title as 'contractNo',
+      coalesce(c.date1, '2042-04-01') as 'contractStartDate',
+      coalesce(c.date2, '2042-04-01') as 'contractExpirationDate',
+      c.comment as 'contractComment'
+    from
+      contract c
+      join contract_comment сс on сс.cid = c.id
+    where
+      сс.comment regexp ?
+    group by
+      c.id
   ) x
 group by
   x.contractId

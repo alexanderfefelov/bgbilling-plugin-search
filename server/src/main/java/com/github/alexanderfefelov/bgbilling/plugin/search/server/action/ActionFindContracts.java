@@ -39,7 +39,7 @@ public class ActionFindContracts extends ActionBase {
 
     private Element createElementFromRecord(Element xmlList, SearchResult record) {
         Element element = createElement(xmlList, "record");
-        element.setAttribute("trigger", record.getTrigger());
+        element.setAttribute("source", record.getSource());
         element.setAttribute("contractId", record.getContractId().toString());
         element.setAttribute("contractNo", record.getContractNo());
         element.setAttribute("contractStartDate", record.getContractStartDate().toString());

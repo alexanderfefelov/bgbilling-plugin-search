@@ -59,7 +59,7 @@ public class Main extends BGUTabPanel {
                 addColumn("Дата начала", "contractStartDate", true);
                 addColumn("Дата окончания", "contractExpirationDate", true);
                 addColumn("Комментарий", "contractComment", true);
-                addColumn("Где найдено", "trigger", true);
+                addColumn("Где найдено", "source", true);
             }
         };
         table = new BGUTable(model);
@@ -154,7 +154,7 @@ public class Main extends BGUTabPanel {
         Document document = TransferManager.getDocument(request);
         List<SearchResult> list = new ArrayList<>();
         XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
-        list.forEach(x -> x.setTrigger("<html>" + x.getTrigger().replaceAll("\\n", "<br>")));
+        list.forEach(x -> x.setSource("<html>" + x.getSource().replaceAll("\\n", "<br>")));
         model.setData(list);
         updateRowHeights(table);
         label.setText("<html>Найдено <font size=\"5\">" + list.size() + "</font> по запросу <font size=\"5\">" + q + "</font>");
@@ -162,7 +162,7 @@ public class Main extends BGUTabPanel {
 
     private SearchResult createRecordFromElement(Element element) {
         SearchResult record = new SearchResult();
-        record.setTrigger(element.getAttribute("trigger"));
+        record.setSource(element.getAttribute("source"));
         record.setContractId(Integer.parseInt(element.getAttribute("contractId")));
         record.setContractNo(element.getAttribute("contractNo"));
         if (!element.getAttribute("contractStartDate").equals(EMPTY_DATE)) {

@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class SearchResult {
 
-    public String getTrigger() {
-        return trigger;
+    public String getSource() {
+        return source;
     }
 
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public Integer getContractId() {
@@ -52,7 +52,7 @@ public class SearchResult {
         this.contractComment = contractComment;
     }
 
-    private String trigger;
+    private String source;
     private Integer contractId;
     private String contractNo;
     private Date contractStartDate;
