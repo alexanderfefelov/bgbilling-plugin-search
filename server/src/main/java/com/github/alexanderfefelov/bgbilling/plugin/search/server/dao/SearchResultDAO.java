@@ -3,8 +3,10 @@ package com.github.alexanderfefelov.bgbilling.plugin.search.server.dao;
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +35,7 @@ public class SearchResultDAO {
                     q.split("\\s+"));
         }
 
-        try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts"))) {
+        try (PreparedStatement statement = connection.prepareStatement(findContractsQuery)) {
             statement.setString(1, q);
             statement.setString(2, terms);
             statement.setString(3, terms);
@@ -63,12 +65,18 @@ public class SearchResultDAO {
     }
 
     private void loadSQLQueries() throws IOException {
-        try (InputStream stream = getClass().getResourceAsStream("sql-queries.properties")) {
-            sqlQueries.load(stream);
+        try (InputStream stream = getClass().getResourceAsStream("find-contracts.sql");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line).append("\n");
+            }
+            findContractsQuery = builder.toString();
         }
     }
 
-    private final Properties sqlQueries = new Properties();
+    private String findContractsQuery;
     private final Connection connection;
     private final Logger logger;
 
