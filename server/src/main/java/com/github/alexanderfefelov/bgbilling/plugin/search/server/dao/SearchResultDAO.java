@@ -21,29 +21,17 @@ public class SearchResultDAO {
         loadSQLQueries();
     }
 
-    public List<SearchResult> findContracts(String query) throws SQLException {
+    public List<SearchResult> findContracts(String q) throws SQLException {
         List<SearchResult> list = new ArrayList<>();
 
-        try {
-            long id = Long.parseLong(query);
-            try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts_by_id"))) {
-                statement.setLong(1, id);
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    list.add(createRecordFromResultSet(resultSet));
-                }
-            } catch (SQLException sqle) {
-                logger.error(sqle);
-                throw sqle;
-            }
-        } catch (NumberFormatException nfe) {
-        }
-
         String regex = String.join(".*",
-                query.split("\\s+"));
+                q.split("\\s+"));
 
-        try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts_by_text_parameter"))) {
-            statement.setString(1, regex);
+        try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts"))) {
+            statement.setString(1, q);
+            statement.setString(2, regex);
+            statement.setString(3, regex);
+            statement.setString(4, regex);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(createRecordFromResultSet(resultSet));
