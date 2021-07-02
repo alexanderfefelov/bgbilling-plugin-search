@@ -62,6 +62,7 @@ public class SearchResultDAO {
         record.setContractNo(resultSet.getString("contractNo"));
         record.setContractStartDate(resultSet.getDate("contractStartDate"));
         record.setContractExpirationDate(resultSet.getDate("contractExpirationDate"));
+        record.setContractComment(resultSet.getString("contractComment"));
         return record;
     }
 

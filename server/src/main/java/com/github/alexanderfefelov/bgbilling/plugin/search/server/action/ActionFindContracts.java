@@ -42,6 +42,7 @@ public class ActionFindContracts extends ActionBase {
         element.setAttribute("contractNo", record.getContractNo());
         element.setAttribute("contractStartDate", record.getContractStartDate().toString());
         element.setAttribute("contractExpirationDate", record.getContractExpirationDate().toString());
+        element.setAttribute("contractComment", record.getContractComment());
         return element;
     }
 

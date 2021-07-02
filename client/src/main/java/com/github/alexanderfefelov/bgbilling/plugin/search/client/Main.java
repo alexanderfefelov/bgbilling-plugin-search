@@ -29,42 +29,25 @@ public class Main extends BGUTabPanel {
     }
 
     @Override
-    protected void jbInit() {
-        JPanel controls = new JPanel(new GridBagLayout());
-
+    protected void jbInit() throws Exception {
         input = new JTextField(20);
-        controls.add(input, new GridBagConstraints(0, 0, 1, 1, 0, 0, 10, 0,
-                new Insets(0, 5, 5, 0),
-                0, 0));
 
         button = new JButton("Найти");
         button.addActionListener(e -> onFindButtonPressed());
-        controls.add(button, new GridBagConstraints(1, 0, 1, 1, 0, 0, 10, 1,
-                new Insets(0, 5, 5, 5),
-                0, 0));
 
-        controls.add(new JPanel(), new GridBagConstraints(2, 0, 1, 1, 1, 0, 10, 2,
-                new Insets(0, 15, 0, 0),
-                0, 0));
+        label = new JLabel("", SwingConstants.RIGHT);
 
-        page = new BGControlPanelPages();
-        controls.add(page, new GridBagConstraints(4, 0, 1, 1, 0, 0, 10, 0, new
-                Insets(0, 15, 5, 5),
-                0, 0));
-
-        setLayout(new GridBagLayout());
-
-        add(controls, new GridBagConstraints(0, 0, 1, 1, 1, 0, 10, 1,
-                new Insets(5, 0, 5, 0),
-                0, 0));
+        pageButtons = new BGControlPanelPages();
+        pageButtons.init();
 
         model = new BGTableModel<SearchResult>("SearchResult") {
             protected void initColumns() {
                 addColumn("", 0, 0, 0, "contractId", false);
-                addColumn("Контракт", 100, 100, 100, "contractNo", true);
-                addColumn("Дата начала", 100, 100, 100, "contractStartDate", true);
-                addColumn("Дата окончания", 100, 100, 100, "contractExpirationDate", true);
-                addColumn("Где найдено", 100, 100, 100, "trigger", true);
+                addColumn("Контракт", "contractNo", true);
+                addColumn("Дата начала", "contractStartDate", true);
+                addColumn("Дата окончания", "contractExpirationDate", true);
+                addColumn("Комментарий", "contractComment", true);
+                addColumn("Где найдено", "trigger", true);
             }
         };
         table = new BGUTable(model);
@@ -76,26 +59,71 @@ public class Main extends BGUTabPanel {
 
             }
         });
-        add(new JScrollPane(table), new GridBagConstraints(0, 2, 1, 1, 1, 1, 10, 1,
-                new Insets(0, 5, 5, 5),
-                0, 0));
 
-        page.init();
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(0, 0, 0, 0);
+
+        JPanel controls = new JPanel(new GridBagLayout());
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        controls.add(input, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        controls.add(button, constraints);
+
+        constraints.gridx = 2;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        controls.add(label, constraints);
+
+        constraints.gridx = 3;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        controls.add(pageButtons, constraints);
+
+        setLayout(new GridBagLayout());
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.BOTH;
+        add(controls, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+        add(new JScrollPane(table), constraints);
+
+        getRootPane().setDefaultButton(button);
+        input.requestFocusInWindow();
     }
 
     private void onFindButtonPressed() {
-        button.setEnabled(false);
-
+        String q = input.getText();
         Request request = new Request();
         request.setModule("com.github.alexanderfefelov.bgbilling.plugin.search");
         request.setAction("FindContracts");
-        request.setAttribute("q", input.getText());
+        request.setAttribute("q", q);
         Document document = TransferManager.getDocument(request);
         List<SearchResult> list = new ArrayList<>();
         XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
         model.setData(list);
-
-        button.setEnabled(true);
+        label.setText("Запрос: " + q);
     }
 
     private SearchResult createRecordFromElement(Element element) {
@@ -111,15 +139,17 @@ public class Main extends BGUTabPanel {
             record.setContractExpirationDate(dateFormat.parse(element.getAttribute("contractExpirationDate")));
         } catch (ParseException e) {
         }
+        record.setContractComment(element.getAttribute("contractComment"));
         return record;
     }
 
-    private static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     private JTextField input;
     private JButton button;
-    private BGControlPanelPages page;
+    private JLabel label;
+    private BGControlPanelPages pageButtons;
     private BGUTable table;
     private BGTableModel<SearchResult> model;
 

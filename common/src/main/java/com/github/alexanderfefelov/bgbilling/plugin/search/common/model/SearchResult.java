@@ -44,10 +44,19 @@ public class SearchResult {
         this.contractExpirationDate = contractExpirationDate;
     }
 
+    public String getContractComment() {
+        return contractComment;
+    }
+
+    public void setContractComment(String contractComment) {
+        this.contractComment = contractComment;
+    }
+
     private String trigger;
     private Integer contractId;
     private String contractNo;
     private Date contractStartDate;
     private Date contractExpirationDate;
+    private String contractComment;
 
 }
