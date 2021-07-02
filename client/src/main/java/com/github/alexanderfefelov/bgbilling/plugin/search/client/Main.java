@@ -90,6 +90,13 @@ public class Main extends BGUTabPanel {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         controls.add(label, constraints);
 
+        constraints.gridx = 4;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        controls.add(new JPanel(), constraints);
+
         setLayout(new GridBagLayout());
 
         constraints.gridx = 0;
@@ -124,7 +131,7 @@ public class Main extends BGUTabPanel {
         List<SearchResult> list = new ArrayList<>();
         XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
         model.setData(list);
-        label.setText("Найдено " + list.size() + " по запросу \"" + q + "\"");
+        label.setText("<html>Найдено <font size=\"5\">" + list.size() + "</font> по запросу <font size=\"5\">" + q + "</font>");
     }
 
     private SearchResult createRecordFromElement(Element element) {

@@ -24,14 +24,22 @@ public class SearchResultDAO {
     public List<SearchResult> findContracts(String q) throws SQLException {
         List<SearchResult> list = new ArrayList<>();
 
-        String regex = String.join(".*",
-                q.split("\\s+"));
+        String terms = q;
+
+        if (q.charAt(0) == '"' && q.charAt(q.length() - 1) == '"') {
+            terms = q.substring(1, q.length() - 2);
+        } else {
+            terms = String.join(".*",
+                    q.split("\\s+"));
+        }
 
         try (PreparedStatement statement = connection.prepareStatement(sqlQueries.getProperty("find_contracts"))) {
             statement.setString(1, q);
-            statement.setString(2, regex);
-            statement.setString(3, regex);
-            statement.setString(4, regex);
+            statement.setString(2, terms);
+            statement.setString(3, terms);
+            statement.setString(4, terms);
+            statement.setString(5, terms);
+            statement.setString(6, terms);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(createRecordFromResultSet(resultSet));
