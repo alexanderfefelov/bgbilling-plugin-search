@@ -3,6 +3,7 @@ package com.github.alexanderfefelov.bgbilling.plugin.search.server.action;
 import bitel.billing.server.ActionBase;
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import com.github.alexanderfefelov.bgbilling.plugin.search.server.dao.SearchResultDAO;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import ru.bitel.bgbilling.common.BGIllegalArgumentException;
 
@@ -28,6 +29,7 @@ public class ActionFindContracts extends ActionBase {
 
         SearchResultDAO dao = new SearchResultDAO(con, log);
         List<SearchResult> list = dao.findContracts(query);
+        logger.info("query: " + query + ", found: " + list.size());
         Element xmlList = createElement(rootNode, "list");
         list.forEach(record -> createElementFromRecord(xmlList, record));
 
@@ -46,4 +48,5 @@ public class ActionFindContracts extends ActionBase {
         return element;
     }
 
+    private final Logger logger = Logger.getLogger(getClass());
 }

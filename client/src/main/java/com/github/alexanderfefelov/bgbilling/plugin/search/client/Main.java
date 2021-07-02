@@ -37,9 +37,6 @@ public class Main extends BGUTabPanel {
 
         label = new JLabel("", SwingConstants.RIGHT);
 
-        pageButtons = new BGControlPanelPages();
-        pageButtons.init();
-
         model = new BGTableModel<SearchResult>("SearchResult") {
             protected void initColumns() {
                 addColumn("", 0, 0, 0, "contractId", false);
@@ -69,29 +66,29 @@ public class Main extends BGUTabPanel {
         constraints.gridy = 0;
         constraints.weightx = 0;
         constraints.weighty = 0;
-        constraints.fill = GridBagConstraints.NONE;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         controls.add(input, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.weightx = 0;
         constraints.weighty = 0;
-        constraints.fill = GridBagConstraints.NONE;
-        controls.add(button, constraints);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        controls.add(new JPanel(), constraints);
 
         constraints.gridx = 2;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        controls.add(button, constraints);
+
+        constraints.gridx = 3;
         constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.weighty = 0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         controls.add(label, constraints);
-
-        constraints.gridx = 3;
-        constraints.gridy = 0;
-        constraints.weightx = 0;
-        constraints.weighty = 0;
-        constraints.fill = GridBagConstraints.NONE;
-        controls.add(pageButtons, constraints);
 
         setLayout(new GridBagLayout());
 
@@ -100,6 +97,8 @@ public class Main extends BGUTabPanel {
         constraints.weightx = 1;
         constraints.weighty = 0;
         constraints.fill = GridBagConstraints.BOTH;
+        constraints.ipadx = 5;
+        constraints.ipady = 5;
         add(controls, constraints);
 
         constraints.gridx = 0;
@@ -107,6 +106,8 @@ public class Main extends BGUTabPanel {
         constraints.weightx = 1;
         constraints.weighty = 1;
         constraints.fill = GridBagConstraints.BOTH;
+        constraints.ipadx = 5;
+        constraints.ipady = 5;
         add(new JScrollPane(table), constraints);
 
         getRootPane().setDefaultButton(button);
@@ -123,7 +124,7 @@ public class Main extends BGUTabPanel {
         List<SearchResult> list = new ArrayList<>();
         XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
         model.setData(list);
-        label.setText("Запрос: " + q);
+        label.setText("Найдено " + list.size() + " по запросу \"" + q + "\"");
     }
 
     private SearchResult createRecordFromElement(Element element) {
@@ -131,25 +132,29 @@ public class Main extends BGUTabPanel {
         record.setTrigger(element.getAttribute("trigger"));
         record.setContractId(Integer.parseInt(element.getAttribute("contractId")));
         record.setContractNo(element.getAttribute("contractNo"));
-        try {
-            record.setContractStartDate(dateFormat.parse(element.getAttribute("contractStartDate")));
-        } catch (ParseException e) {
+        if (!element.getAttribute("contractStartDate").equals(EMPTY_DATE)) {
+            try {
+                record.setContractStartDate(dateFormat.parse(element.getAttribute("contractStartDate")));
+            } catch (ParseException e) {
+            }
         }
-        try {
-            record.setContractExpirationDate(dateFormat.parse(element.getAttribute("contractExpirationDate")));
-        } catch (ParseException e) {
+        if (!element.getAttribute("contractExpirationDate").equals(EMPTY_DATE)) {
+            try {
+                record.setContractExpirationDate(dateFormat.parse(element.getAttribute("contractExpirationDate")));
+            } catch (ParseException e) {
+            }
         }
         record.setContractComment(element.getAttribute("contractComment"));
         return record;
     }
 
+    private static final String EMPTY_DATE = "2042-04-01";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     private JTextField input;
     private JButton button;
     private JLabel label;
-    private BGControlPanelPages pageButtons;
     private BGUTable table;
     private BGTableModel<SearchResult> model;
 
