@@ -1,4 +1,4 @@
-package com.github.alexanderfefelov.bgbilling.plugin.search.server.dao;
+package com.github.alexanderfefelov.bgbilling.plugin.search.server.action;
 
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import org.apache.log4j.Logger;
@@ -12,11 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class SearchResultDAO {
+public class ContractFinder {
 
-    public SearchResultDAO(Connection connection, Logger logger) throws IOException {
+    public ContractFinder(Connection connection, Logger logger) throws IOException {
         this.connection = connection;
         this.logger = logger;
         loadSQLQueries();
@@ -25,13 +27,15 @@ public class SearchResultDAO {
     public List<SearchResult> findContracts(String q) throws SQLException {
         List<SearchResult> list = new ArrayList<>();
 
-        String terms = q;
-
+        String terms;
         if (q.charAt(0) == '"' && q.charAt(q.length() - 1) == '"') {
             terms = q.substring(1, q.length() - 2);
         } else {
-            terms = String.join(".*",
-                    q.split("\\s+"));
+            Permutator<String> permutator = new Permutator<>();
+            List<List<String>> permutations = permutator.permutate(Arrays.stream(q.split("\\s+")).limit(3).collect(Collectors.toList()));
+            terms = permutations.stream()
+                    .map(x -> String.join(".*", x))
+                    .collect(Collectors.joining("|"));
         }
 
         try (PreparedStatement statement = connection.prepareStatement(findContractsQuery)) {
