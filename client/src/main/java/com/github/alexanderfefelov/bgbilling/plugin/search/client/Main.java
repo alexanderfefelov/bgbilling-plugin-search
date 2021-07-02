@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Main extends BGUTabPanel {
 
@@ -146,18 +147,42 @@ public class Main extends BGUTabPanel {
     }
 
     private void onFindButtonPressed() {
+        input.setEnabled(false);
+        button.setEnabled(false);
+        label.setText("Ждите...");
         String q = input.getText();
-        Request request = new Request();
-        request.setModule("com.github.alexanderfefelov.bgbilling.plugin.search");
-        request.setAction("FindContracts");
-        request.setAttribute("q", q);
-        Document document = TransferManager.getDocument(request);
-        List<SearchResult> list = new ArrayList<>();
-        XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
-        list.forEach(x -> x.setSource("<html>" + x.getSource().replaceAll("\\n", "<br>")));
-        model.setData(list);
-        updateRowHeights(table);
-        label.setText("<html>Найдено <font size=\"5\">" + list.size() + "</font> по запросу <font size=\"5\">" + q + "</font>");
+        SwingWorker<Document, Void> worker = new SwingWorker<Document, Void>() {
+            @Override
+            protected Document doInBackground() {
+                Request request = new Request();
+                request.setModule("com.github.alexanderfefelov.bgbilling.plugin.search");
+                request.setAction("FindContracts");
+                request.setAttribute("q", q);
+                return TransferManager.getDocument(request);
+            }
+            @Override
+            public void done() {
+                try {
+                    Document document = get();
+                    List<SearchResult> list = new ArrayList<>();
+                    XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
+                    list.forEach(x -> x.setSource("<html>" + x.getSource().replaceAll("\\n", "<br>")));
+                    model.setData(list);
+                    updateRowHeights(table);
+                    label.setText("<html>Найдено <font size=\"5\">" + list.size() + "</font> по запросу <font size=\"5\">" + q + "</font>");
+                } catch (InterruptedException ie) {
+                    label.setText(ie.getMessage());
+                    ie.printStackTrace();
+                } catch (ExecutionException ee) {
+                    label.setText(ee.getMessage());
+                    ee.printStackTrace();
+                } finally {
+                    input.setEnabled(true);
+                    button.setEnabled(true);
+                }
+            }
+        };
+        worker.execute();
     }
 
     private SearchResult createRecordFromElement(Element element) {
