@@ -5,13 +5,14 @@ import bitel.billing.module.common.Request;
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import ru.bitel.bgbilling.client.common.BGControlPanelPages;
 import ru.bitel.bgbilling.client.common.BGUTabPanel;
 import ru.bitel.bgbilling.client.common.BGUTable;
 import ru.bitel.common.XMLUtils;
 import ru.bitel.common.client.table.BGTableModel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,6 +32,20 @@ public class Main extends BGUTabPanel {
     @Override
     protected void jbInit() throws Exception {
         input = new JTextField(20);
+        input.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateInput();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateInput();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        });
 
         button = new JButton("Найти");
         button.addActionListener(e -> onFindButtonPressed());
@@ -118,7 +133,16 @@ public class Main extends BGUTabPanel {
         add(new JScrollPane(table), constraints);
 
         getRootPane().setDefaultButton(button);
+        button.setEnabled(false);
         input.requestFocusInWindow();
+    }
+
+    private void validateInput() {
+        if (input.getText().replaceAll("\\s+", "").length() >= 3) {
+            button.setEnabled(true);
+        } else {
+            button.setEnabled(false);
+        }
     }
 
     private void onFindButtonPressed() {
@@ -130,7 +154,9 @@ public class Main extends BGUTabPanel {
         Document document = TransferManager.getDocument(request);
         List<SearchResult> list = new ArrayList<>();
         XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
+        list.forEach(x -> x.setTrigger("<html>" + x.getTrigger().replaceAll("\\n", "<br>")));
         model.setData(list);
+        updateRowHeights(table);
         label.setText("<html>Найдено <font size=\"5\">" + list.size() + "</font> по запросу <font size=\"5\">" + q + "</font>");
     }
 
@@ -153,6 +179,17 @@ public class Main extends BGUTabPanel {
         }
         record.setContractComment(element.getAttribute("contractComment"));
         return record;
+    }
+
+    private void updateRowHeights(JTable table) {
+        for (int row = 0; row < table.getRowCount(); row++) {
+            int rowHeight = table.getRowHeight();
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+                rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+            }
+            table.setRowHeight(row, rowHeight);
+        }
     }
 
     private static final String EMPTY_DATE = "2042-04-01";

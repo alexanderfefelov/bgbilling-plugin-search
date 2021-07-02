@@ -1,5 +1,5 @@
 select
-  group_concat(x.`trigger` separator '; ') as 'trigger',
+  group_concat(x.`trigger` separator '\n') as 'trigger',
   x.contractId,
   x.contractNo,
   x.contractStartDate,
