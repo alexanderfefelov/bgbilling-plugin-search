@@ -14,8 +14,8 @@ from
       group_concat(x.source separator '\n') as 'source',
       x.contractId,
       c.title as 'contractNo',
-      coalesce(c.date1, '2042-04-01') as 'contractStartDate',
-      coalesce(c.date2, '2042-04-01') as 'contractExpirationDate',
+      coalesce(c.date1, '2042-04-06') as 'contractStartDate',
+      coalesce(c.date2, '2042-04-06') as 'contractExpirationDate',
       c.comment as 'contractComment',
       c.mode = 0 as 'contractPostpaidMode',
       c.closesumma as 'contractLimit'
@@ -83,4 +83,4 @@ from
   left join contract_tariff ct on ct.cid = y.contractId
   left join tariff_plan tp on tp.id = ct.tpid
 group by
-  ct.cid
+  y.contractId
