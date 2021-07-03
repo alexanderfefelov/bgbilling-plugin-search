@@ -52,11 +52,29 @@ public class SearchResult {
         this.contractComment = contractComment;
     }
 
+    public Boolean getContractPostpaidMode() {
+        return contractPostpaidMode;
+    }
+
+    public void setContractPostpaidMode(Boolean contractPostpaidMode) {
+        this.contractPostpaidMode = contractPostpaidMode;
+    }
+
+    public Double getContractLimit() {
+        return contractLimit;
+    }
+
+    public void setContractLimit(Double contractLimit) {
+        this.contractLimit = contractLimit;
+    }
+
     private String source;
     private Integer contractId;
     private String contractNo;
     private Date contractStartDate;
     private Date contractExpirationDate;
     private String contractComment;
+    private Boolean contractPostpaidMode;
+    private Double contractLimit;
 
 }

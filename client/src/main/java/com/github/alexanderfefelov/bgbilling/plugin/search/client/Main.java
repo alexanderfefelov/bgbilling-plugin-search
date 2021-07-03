@@ -59,6 +59,8 @@ public class Main extends BGUTabPanel {
                 addColumn("Контракт", "contractNo", true);
                 addColumn("Дата начала", "contractStartDate", true);
                 addColumn("Дата окончания", "contractExpirationDate", true);
+                addColumn("Кредит?", "contractPostpaidMode", true);
+                addColumn("Лимит", "contractLimit", true);
                 addColumn("Комментарий", "contractComment", true);
                 addColumn("Где найдено", "source", true);
             }
@@ -147,6 +149,7 @@ public class Main extends BGUTabPanel {
     }
 
     private void onFindButtonPressed() {
+        model.setData(null);
         input.setEnabled(false);
         button.setEnabled(false);
         label.setText("Ждите...");
@@ -169,7 +172,7 @@ public class Main extends BGUTabPanel {
                     list.forEach(x -> x.setSource("<html>" + x.getSource().replaceAll("\\n", "<br>")));
                     model.setData(list);
                     updateRowHeights(table);
-                    label.setText("<html>Найдено <font size=\"5\">" + list.size() + "</font> по запросу <font size=\"5\">" + q + "</font>");
+                    label.setText("<html>Найдено <font size=\"4\">" + list.size() + "</font> по запросу <font size=\"4\">" + q + "</font>");
                 } catch (InterruptedException ie) {
                     label.setText(ie.getMessage());
                     ie.printStackTrace();
@@ -203,6 +206,8 @@ public class Main extends BGUTabPanel {
             }
         }
         record.setContractComment(element.getAttribute("contractComment"));
+        record.setContractPostpaidMode(Boolean.parseBoolean(element.getAttribute("contractPostpaidMode")));
+        record.setContractLimit(Double.parseDouble(element.getAttribute("contractLimit")));
         return record;
     }
 

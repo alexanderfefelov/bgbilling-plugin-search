@@ -68,6 +68,8 @@ public class ContractFinder {
         record.setContractStartDate(resultSet.getDate("contractStartDate"));
         record.setContractExpirationDate(resultSet.getDate("contractExpirationDate"));
         record.setContractComment(resultSet.getString("contractComment"));
+        record.setContractPostpaidMode(resultSet.getBoolean("contractPostpaidMode"));
+        record.setContractLimit(resultSet.getDouble("contractLimit"));
         return record;
     }
 
