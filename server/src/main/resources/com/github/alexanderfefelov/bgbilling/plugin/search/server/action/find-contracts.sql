@@ -6,7 +6,8 @@ select
   coalesce(c.date2, '2042-04-01') as 'contractExpirationDate',
   c.comment as 'contractComment',
   c.mode = 0 as 'contractPostpaidMode',
-  c.closesumma as 'contractLimit'
+  c.closesumma as 'contractLimit',
+  group_concat(tp.title separator '\n') as 'contractPricingPlans'
 from
   (
     select
@@ -65,5 +66,7 @@ from
       cc.cid
   ) x
   join contract c on c.id = x.contractId
+  left join contract_tariff ct on ct.cid = x.contractId
+  left join tariff_plan tp on tp.id = ct.tpid
 group by
   x.contractId

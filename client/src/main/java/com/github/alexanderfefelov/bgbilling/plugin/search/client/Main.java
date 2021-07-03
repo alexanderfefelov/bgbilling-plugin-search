@@ -62,6 +62,7 @@ public class Main extends BGUTabPanel {
                 addColumn("Кредит?", "contractPostpaidMode", true);
                 addColumn("Лимит", "contractLimit", true);
                 addColumn("Комментарий", "contractComment", true);
+                addColumn("Тарифные планы", "contractPricingPlans", true);
                 addColumn("Где найдено", "source", true);
             }
         };
@@ -170,6 +171,7 @@ public class Main extends BGUTabPanel {
                     List<SearchResult> list = new ArrayList<>();
                     XMLUtils.selectElements(document, "//list/record").forEach(element -> list.add(createRecordFromElement(element)));
                     list.forEach(x -> x.setSource("<html>" + x.getSource().replaceAll("\\n", "<br>")));
+                    list.forEach(x -> x.setContractPricingPlans("<html>" + x.getContractPricingPlans().replaceAll("\\n", "<br>")));
                     model.setData(list);
                     updateRowHeights(table);
                     label.setText("<html>Найдено <font size=\"4\">" + list.size() + "</font> по запросу <font size=\"4\">" + q + "</font>");
@@ -208,6 +210,7 @@ public class Main extends BGUTabPanel {
         record.setContractComment(element.getAttribute("contractComment"));
         record.setContractPostpaidMode(Boolean.parseBoolean(element.getAttribute("contractPostpaidMode")));
         record.setContractLimit(Double.parseDouble(element.getAttribute("contractLimit")));
+        record.setContractPricingPlans(element.getAttribute("contractPricingPlans"));
         return record;
     }
 

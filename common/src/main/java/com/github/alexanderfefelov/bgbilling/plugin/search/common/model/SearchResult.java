@@ -68,6 +68,14 @@ public class SearchResult {
         this.contractLimit = contractLimit;
     }
 
+    public String getContractPricingPlans() {
+        return contractPricingPlans;
+    }
+
+    public void setContractPricingPlans(String contractPricingPlans) {
+        this.contractPricingPlans = contractPricingPlans;
+    }
+
     private String source;
     private Integer contractId;
     private String contractNo;
@@ -76,5 +84,6 @@ public class SearchResult {
     private String contractComment;
     private Boolean contractPostpaidMode;
     private Double contractLimit;
+    private String contractPricingPlans;
 
 }
