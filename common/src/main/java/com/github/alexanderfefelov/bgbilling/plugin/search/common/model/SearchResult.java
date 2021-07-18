@@ -76,6 +76,14 @@ public class SearchResult {
         this.contractPricingPlans = contractPricingPlans;
     }
 
+    public Double getContractBalance() {
+        return contractBalance;
+    }
+
+    public void setContractBalance(Double contractBalance) {
+        this.contractBalance = contractBalance;
+    }
+
     private String source;
     private Integer contractId;
     private String contractNo;
@@ -83,6 +91,7 @@ public class SearchResult {
     private Date contractExpirationDate;
     private String contractComment;
     private Boolean contractPostpaidMode;
+    private Double contractBalance;
     private Double contractLimit;
     private String contractPricingPlans;
 

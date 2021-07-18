@@ -6,6 +6,23 @@ select
   y.contractExpirationDate,
   y.contractComment,
   y.contractPostpaidMode,
+  (
+    select
+      coalesce(cb.summa1 + cb.summa2 - cb.summa3 - cb.summa4, 0)
+    from
+      contract_balance cb
+      join (
+        select
+          cid,
+          max(date(concat(lcb.yy, '-', lcb.mm, '-01'))) as dat
+        from
+          contract_balance lcb
+        group by
+          lcb.cid
+        ) last_contract_balance on last_contract_balance.cid = cb.cid
+    where
+      cb.cid = y.contractId
+    ) as contractBalance,
   y.contractLimit,
   group_concat(tp.title separator '\n') as 'contractPricingPlans'
 from
