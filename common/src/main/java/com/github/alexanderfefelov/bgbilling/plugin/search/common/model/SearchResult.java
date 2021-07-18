@@ -84,6 +84,14 @@ public class SearchResult {
         this.contractBalance = contractBalance;
     }
 
+    public String getContractBalanceChangedAt() {
+        return contractBalanceChangedAt;
+    }
+
+    public void setContractBalanceChangedAt(String contractBalanceChangedAt) {
+        this.contractBalanceChangedAt = contractBalanceChangedAt;
+    }
+
     private String source;
     private Integer contractId;
     private String contractNo;
@@ -92,6 +100,7 @@ public class SearchResult {
     private String contractComment;
     private Boolean contractPostpaidMode;
     private Double contractBalance;
+    private String contractBalanceChangedAt;
     private Double contractLimit;
     private String contractPricingPlans;
 

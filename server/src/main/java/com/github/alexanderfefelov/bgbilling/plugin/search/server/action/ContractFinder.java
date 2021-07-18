@@ -70,6 +70,7 @@ public class ContractFinder {
         record.setContractComment(resultSet.getString("contractComment"));
         record.setContractPostpaidMode(resultSet.getBoolean("contractPostpaidMode"));
         record.setContractBalance(resultSet.getDouble("contractBalance"));
+        record.setContractBalanceChangedAt(resultSet.getString("contractBalanceChangedAt"));
         record.setContractLimit(resultSet.getDouble("contractLimit"));
         record.setContractPricingPlans(resultSet.getString("contractPricingPlans"));
         return record;

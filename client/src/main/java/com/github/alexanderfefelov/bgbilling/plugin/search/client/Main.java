@@ -62,6 +62,7 @@ public class Main extends BGUTabPanel {
                 addColumn("Кредит?", "contractPostpaidMode", true);
                 addColumn("Лимит", "contractLimit", true);
                 addColumn("Баланс", "contractBalance", true);
+                addColumn("Месяц баланса", "contractBalanceChangedAt", true);
                 addColumn("Комментарий", "contractComment", true);
                 addColumn("Тарифные планы", "contractPricingPlans", true);
                 addColumn("Где найдено", "source", true);
@@ -211,6 +212,7 @@ public class Main extends BGUTabPanel {
         record.setContractComment(element.getAttribute("contractComment"));
         record.setContractPostpaidMode(Boolean.parseBoolean(element.getAttribute("contractPostpaidMode")));
         record.setContractBalance(Double.parseDouble(element.getAttribute("contractBalance")));
+        record.setContractBalanceChangedAt(element.getAttribute("contractBalanceChangedAt"));
         record.setContractLimit(Double.parseDouble(element.getAttribute("contractLimit")));
         record.setContractPricingPlans(element.getAttribute("contractPricingPlans"));
         return record;

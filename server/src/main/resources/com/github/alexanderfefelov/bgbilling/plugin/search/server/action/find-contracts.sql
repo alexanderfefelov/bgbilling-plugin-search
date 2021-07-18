@@ -8,6 +8,7 @@ select
   y.contractPostpaidMode,
   y.contractLimit,
   y.contractBalance,
+  y.contractBalanceChangedAt,
   group_concat(tp.title separator '\n') as 'contractPricingPlans'
 from
   (
@@ -28,7 +29,7 @@ from
           join (
             select
               cid,
-              max(date(concat(lcb.yy, '-', lcb.mm, '-01'))) as dat
+              max(date(concat(lcb.yy, '-', lcb.mm, '-01')))
             from
               contract_balance lcb
             group by
@@ -36,7 +37,15 @@ from
             ) last_contract_balance on last_contract_balance.cid = cb.cid
         where
           cb.cid = c.id
-        ) as 'contractBalance'
+        ) as 'contractBalance',
+        (
+          select
+            date_format(max(date(concat(cbca.yy, '-', cbca.mm, '-01'))), '%Y-%m')
+          from
+            contract_balance cbca
+          where
+            cbca.cid = c.id
+          ) as contractBalanceChangedAt
     from
       (
         select
