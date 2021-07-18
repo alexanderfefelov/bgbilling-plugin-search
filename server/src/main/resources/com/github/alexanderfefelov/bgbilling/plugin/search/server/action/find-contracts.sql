@@ -9,7 +9,7 @@ select
   y.contractLimit,
   y.contractBalance,
   y.contractBalanceChangedAt,
-  group_concat(tp.title separator '\n') as 'contractPricingPlans'
+  group_concat(concat(tp.title, ', ', ct.date1) separator '\n') as 'contractPricingPlans'
 from
   (
     select
