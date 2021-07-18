@@ -60,8 +60,8 @@ public class Main extends BGUTabPanel {
                 addColumn("Дата начала", "contractStartDate", true);
                 addColumn("Дата окончания", "contractExpirationDate", true);
                 addColumn("Кредит?", "contractPostpaidMode", true);
-                addColumn("Баланс", "contractBalance", true);
                 addColumn("Лимит", "contractLimit", true);
+                addColumn("Баланс", "contractBalance", true);
                 addColumn("Комментарий", "contractComment", true);
                 addColumn("Тарифные планы", "contractPricingPlans", true);
                 addColumn("Где найдено", "source", true);
