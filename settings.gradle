@@ -11,4 +11,4 @@ gradle.ext {
     pluginBuildTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
 }
 
-include 'client', 'common', 'module', 'server'
+include 'client', 'common', 'plugin', 'server'
