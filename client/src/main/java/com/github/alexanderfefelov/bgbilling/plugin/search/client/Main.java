@@ -34,6 +34,7 @@ public class Main extends BGUTabPanel {
     protected void jbInit() throws Exception {
         input = new JTextField(20);
         input.getDocument().addDocumentListener(new DocumentListener() {
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 validateInput();
@@ -45,7 +46,10 @@ public class Main extends BGUTabPanel {
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {}
+            public void changedUpdate(DocumentEvent e) {
+                validateInput();
+            }
+
         });
 
         button = new JButton("Найти");
@@ -158,6 +162,7 @@ public class Main extends BGUTabPanel {
         label.setText("Ждите...");
         String q = input.getText();
         SwingWorker<Document, Void> worker = new SwingWorker<Document, Void>() {
+
             @Override
             protected Document doInBackground() {
                 Request request = new Request();
@@ -166,6 +171,7 @@ public class Main extends BGUTabPanel {
                 request.setAttribute("q", q);
                 return TransferManager.getDocument(request);
             }
+
             @Override
             public void done() {
                 try {
@@ -188,6 +194,7 @@ public class Main extends BGUTabPanel {
                     button.setEnabled(true);
                 }
             }
+
         };
         worker.execute();
     }
