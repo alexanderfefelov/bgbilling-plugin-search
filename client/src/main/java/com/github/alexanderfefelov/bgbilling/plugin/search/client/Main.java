@@ -229,7 +229,7 @@ public class Main extends BGUTabPanel {
         }
     }
 
-    private static final String EMPTY_DATE = "2042-04-06";
+    private static final String EMPTY_DATE = "2042-06-04";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
