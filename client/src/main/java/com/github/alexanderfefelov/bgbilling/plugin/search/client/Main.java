@@ -2,6 +2,7 @@ package com.github.alexanderfefelov.bgbilling.plugin.search.client;
 
 import bitel.billing.module.admin.TransferManager;
 import bitel.billing.module.common.Request;
+import com.github.alexanderfefelov.bgbilling.plugin.search.BGPluginInfo;
 import com.github.alexanderfefelov.bgbilling.plugin.search.common.model.SearchResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -166,7 +167,7 @@ public class Main extends BGUTabPanel {
             @Override
             protected Document doInBackground() {
                 Request request = new Request();
-                request.setModule("com.github.alexanderfefelov.bgbilling.plugin.search");
+                request.setModule(BGPluginInfo.id);
                 request.setAction("FindContracts");
                 request.setAttribute("q", q);
                 return TransferManager.getDocument(request);
